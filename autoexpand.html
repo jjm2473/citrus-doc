@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>第 14 章 AutoExpand工具使用指南</title><link rel="stylesheet" type="text/css" href="docbook.css"/><meta name="generator" content="DocBook XSL Stylesheets V1.77.1"/><link rel="home" href="index.html" title="Webx框架指南"/><link rel="up" href="pt05.html" title="部分 V. 辅助工具"/><link rel="prev" href="autoconfig.html" title="第 13 章 AutoConfig工具使用指南"/><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">第 14 章 AutoExpand工具使用指南</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="autoconfig.html">上一页</a> </td><th width="60%" align="center">部分 V. 辅助工具</th><td width="20%" align="right"> </td></tr></table><hr/></div><div xml:lang="zh-CN" class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="tool.autoexpand"><!--anchor tool.autoexpand--></a>第 14 章 AutoExpand工具使用指南</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="autoexpand.html#d0e18641">14.1. AutoExpand工具简介</a></span></dt><dd><dl><dt><span class="section"><a href="autoexpand.html#d0e18646">14.1.1. Java、JavaEE打包的格式</a></span></dt><dt><span class="section"><a href="autoexpand.html#d0e18704">14.1.2. 应用部署的方式</a></span></dt><dt><span class="section"><a href="autoexpand.html#d0e18741">14.1.3. AutoExpand的用武之地</a></span></dt></dl></dd><dt><span class="section"><a href="autoexpand.html#d0e18791">14.2. AutoExpand的使用</a></span></dt><dd><dl><dt><span class="section"><a href="autoexpand.html#d0e18794">14.2.1. 取得AutoExpand</a></span></dt><dt><span class="section"><a href="autoexpand.html#d0e18801">14.2.2. 执行AutoExpand</a></span></dt><dt><span class="section"><a href="autoexpand.html#d0e18870">14.2.3. AutoExpand和AutoConfig的合作</a></span></dt></dl></dd><dt><span class="section"><a href="autoexpand.html#d0e18884">14.3. AutoExpand的参数</a></span></dt><dt><span class="section"><a href="autoexpand.html#d0e19001">14.4. 本章总结</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="d0e18641"><!--anchor d0e18641--></a>14.1. AutoExpand工具简介</h2></div></div></div><p>AutoExpand是一个小工具，可以快速地把应用包展开到目录中。</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e18646"><!--anchor d0e18646--></a>14.1.1. Java、JavaEE打包的格式</h3></div></div></div><p>Java和JavaEE的应用通常被打成一个ZIP格式的包。</p><div class="table"><a id="d0e18651"><!--anchor d0e18651--></a><p class="title"><strong>表 14.1. 标准的Java、JavaEE包的格式</strong></p><div class="table-contents"><table summary="标准的Java、JavaEE包的格式" cellpadding="10" style="border: none;"><colgroup><col width="15%" class="c1"/><col width="85%" class="c2"/></colgroup><thead><tr><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">包类型</th><th style="border-bottom: 0.5pt solid #6666cc; ">说明</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">jar</td><td style="border-bottom: 0.5pt solid #6666cc; ">Java ARchive。共享类库，EJB，独立应用。</td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">war</td><td style="border-bottom: 0.5pt solid #6666cc; ">Web application ARchive。WEB应用。</td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">ear</td><td style="border-bottom: 0.5pt solid #6666cc; ">Enterprise ARchive。企业级应用。</td></tr><tr><td style="border-right: 0.5pt solid #6666cc; ">rar</td><td style="">Resource Adapter Archive。</td></tr></tbody></table></div></div><p>其中jar和war包是当今最常用的格式。其次还有ear。</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Ear包中可以包含多个jar包（包括ejb-jar包）、rar包、war包。</p></li><li class="listitem"><p>War包中可以包含多个jar包。</p></li></ul></div><div class="example"><a id="d0e18693"><!--anchor d0e18693--></a><p class="title"><strong>例 14.1. 包的内部格式</strong></p><div class="example-contents"><p>下面是一个典型的ear包的内部格式：</p><pre class="screen">myapp.ear
+ │  foo-ejb.jar            // 内嵌ejb-jar包。
+ │  bar.jar                // 内嵌普通jar包。
+ │  myweb.war              // 内嵌war包。
+ │
+ └─META-INF
+       application.xml     // EAR描述文件。</pre><p>下面是一个典型的war包的内部格式：</p><pre class="screen">myweb.war
+ │  index.jsp
+ │
+ ├─images
+ ├─META-INF
+ └─WEB-INF
+    │  web.xml             // WAR描述文件。
+    │
+    ├─classes
+    │     foo.class        // Java类文件。
+    │
+    └─lib
+          bar.jar          // 内嵌jar包。
+          baz.jar</pre></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e18704"><!--anchor d0e18704--></a>14.1.2. 应用部署的方式</h3></div></div></div><p>多数应用服务器都支持两种类型的部署方式：以包的形式部署，或者以展开目录的形式部署。</p><div class="table"><a id="d0e18709"><!--anchor d0e18709--></a><p class="title"><strong>表 14.2. 部署应用的方法</strong></p><div class="table-contents"><table summary="部署应用的方法" cellpadding="10" style="border: none;"><colgroup><col width="30%" class="c1"/><col width="70%" class="c2"/></colgroup><thead><tr><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">方法</th><th style="border-bottom: 0.5pt solid #6666cc; ">用途</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">以包的形式部署</td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                <p>你可以把WEB应用的war包直接发布在应用服务器上，应用服务器不需要把包打开就能运行它。</p>
+                                <p>发布一个应用包（只有一个文件），对于deployer来说是比较方便的。通常他只需要把这个包往指定的应用服务器目录一丢，就可以把应用跑起来。</p>
+                                <p>但是以包形式发布的应用不太好调试，因为你为了修改包中的任何一个文件，都必须重新打包。这是很费时的工作。</p>
+                            </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; ">以展开目录的形式部署</td><td style="">以展开目录的形式部署的应用，更适合于开发阶段。这样，开发者可以方便地替换应用中的任何一个文件，而不需要重新打包。这节省了很多时间。</td></tr></tbody></table></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e18741"><!--anchor d0e18741--></a>14.1.3. AutoExpand的用武之地</h3></div></div></div><p>AutoExpand的功能就是把包文件展开到文件夹中。</p><p>事实上，对于多数情况来说，用AutoExpand来展开一个包，和直接使用<span class="command"><strong>jar</strong></span>命令来展开包是没有差别的。例如，展开一个war包，可以用下面两种方法：</p><div class="example"><a id="d0e18751"><!--anchor d0e18751--></a><p class="title"><strong>例 14.2. 用AutoExpand展开一个war包</strong></p><div class="example-contents"><pre class="screen">$ <span class="command"><strong>autoexpand</strong></span> myweb.war 
+Detected system charset encoding: UTF-8
+If your can't read the following text, specify correct one like this: 
+  autoexpand -c mycharset
+
+Expanding: /.../myweb.war
+       To: /.../myweb
+done.
+
+总耗费时间：762毫秒</pre></div></div><div class="example"><a id="d0e18759"><!--anchor d0e18759--></a><p class="title"><strong>例 14.3. 用<span class="command">jar</span>命令展开一个war包</strong></p><div class="example-contents"><pre class="screen">$ <span class="command"><strong>mkdir</strong></span> myweb
+$ <span class="command"><strong>cd</strong></span> myweb
+$ <span class="command"><strong>jar</strong></span> xvf ../myweb.war
+  创建：META-INF/
+  解压 META-INF/MANIFEST.MF
+  ...</pre></div></div><p>但是使用AutoExpand有如下好处：</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>可展开嵌套的包，例如：一个ear中包含war包，用AutoExpand可以一举把它们同时展开。</p></li><li class="listitem"><p>支持更多选项，例如：更新、覆盖、删除多余文件等。</p></li><li class="listitem"><p>比<span class="command"><strong>jar</strong></span>命令速度更快。</p></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="d0e18791"><!--anchor d0e18791--></a>14.2. AutoExpand的使用</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e18794"><!--anchor d0e18794--></a>14.2.1. 取得AutoExpand</h3></div></div></div><p>请参考<a class="xref" href="autoconfig.html#tool.autoconfig.getbinary" title="13.4.1.1. 取得可执行文件">第 13.4.1.1 节 “取得可执行文件”</a>。</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e18801"><!--anchor d0e18801--></a>14.2.2. 执行AutoExpand</h3></div></div></div><p>直接输入<span class="command"><strong>autoexpand</strong></span>可得到如下帮助信息。</p><div class="example"><a id="d0e18809"><!--anchor d0e18809--></a><p class="title"><strong>例 14.4. AutoExpand的帮助信息</strong></p><div class="example-contents"><pre class="screen">$ <span class="command"><strong>autoexpand</strong></span>
+Detected system charset encoding: UTF-8
+If your can't read the following text, specify correct one like this: 
+  autoexpand -c mycharset
+
+使用方法：antxexpand [可选参数] 文件名 [目标目录]
+                
+可选参数：
+ -c,--charset                 输入/输出编码字符集
+ -e,--expand-ejb-jar          是否展开ejb-jar（yes|no），默认为no
+ -h,--help                    显示帮助信息
+ -k,--keep-redundant-files    如果目标目录中有多余的文件，是否保持而不删除，默认为no
+ -o,--overwrite               如果目标目录中的文件比zip文件中的项要新，是否覆盖之，默认为no
+ -r,--expand-rar              是否展开rar（yes|no），默认为yes
+ -v,--verbose                 显示更多信息
+ -w,--expand-war              是否展开war（yes|no），默认为yes
+
+总耗费时间：203毫秒</pre></div></div><p>最简单的AutoExpand命令如下：</p><div class="example"><a id="d0e18819"><!--anchor d0e18819--></a><p class="title"><strong>例 14.5. 最简单的AutoExpand命令</strong></p><div class="example-contents"><pre class="screen">autoexpand myweb.war</pre></div></div><p>这条命令将<code class="filename">myweb.war</code>展开到<code class="filename">myweb</code>目录中。</p><p>你也可以指定一个输出目录：</p><div class="example"><a id="d0e18834"><!--anchor d0e18834--></a><p class="title"><strong>例 14.6. 执行AutoExpand命令：指定输出目录</strong></p><div class="example-contents"><pre class="screen">autoexpand myweb.war myweb-expanded.war</pre></div></div><p>这条命令将<code class="filename">myweb.war</code>展开到<code class="filename">myweb-expanded.war</code>目录中。<span class="emphasis"><em>在目录名中指定后缀（如<code class="code">.war</code>）是一个好主意</em></span>。这样，同一个名称（<code class="code">*.war</code>）既可作为目录名，也可作为包名。你可以在目录和包文件之间自由地切换，而不需要改动服务器的脚本或配置。</p><p>你可以用一条命令展开嵌套的包。例如：</p><div class="example"><a id="d0e18858"><!--anchor d0e18858--></a><p class="title"><strong>例 14.7. 执行AutoExpand命令：展开嵌套的包</strong></p><div class="example-contents"><pre class="screen">autoexpand myapp.ear myapp-expanded.ear</pre></div></div><p>这条命令可以一举把ear以及ear中的所有war都展开。</p><div class="example"><a id="d0e18865"><!--anchor d0e18865--></a><p class="title"><strong>例 14.8. 展开ear以及ear中的所有war</strong></p><div class="example-contents"><pre class="screen">myapp-expanded.ear
+│  foo-ejb.jar
+│  bar.jar
+│
+├─myweb.war        // 展开嵌套的war
+│  │  index.jsp
+│  │
+│  ├─images
+│  ├─META-INF
+│  └─WEB-INF
+│     │  web.xml
+│     │
+│     ├─classes
+│     │     foo.class
+│     │
+│     └─lib
+│           bar.jar
+│           baz.jar
+│
+└─META-INF
+      application.xml</pre></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e18870"><!--anchor d0e18870--></a>14.2.3. AutoExpand和AutoConfig的合作</h3></div></div></div><p>你可以让AutoConfig maven插件在配置完应用以后，将应用展开到指定的目录。</p><div class="example"><a id="d0e18875"><!--anchor d0e18875--></a><p class="title"><strong>例 14.9. AutoConfig完成后，再用AutoExpand展开</strong></p><div class="example-contents"><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<strong class="hl-tag" style="color: #000096">&lt;project</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://maven.apache.org/POM/4.0.0"</span>
+    <span class="hl-attribute" style="color: #F5844C">xmlns:xsi</span>=<span class="hl-value" style="color: #993300">"http://www.w3.org/2001/XMLSchema-instance"</span>
+    <span class="hl-attribute" style="color: #F5844C">xsi:schemaLocation</span>=<span class="hl-value" style="color: #993300">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+    ...
+    <strong class="hl-tag" style="color: #000096">&lt;properties&gt;</strong>
+        ...
+        <em class="hl-comment" style="color: green">&lt;!-- 定义autoconfig的版本，建议将此行写在parent pom.xml中。 --&gt;</em>
+        <strong class="hl-tag" style="color: #000096">&lt;autoconfig-plugin-version&gt;</strong>1.2<strong class="hl-tag" style="color: #000096">&lt;/autoconfig-plugin-version&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/properties&gt;</strong>
+    ...
+    <strong class="hl-tag" style="color: #000096">&lt;build&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;plugins&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;plugin&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;groupId&gt;</strong>com.alibaba.citrus.tool<strong class="hl-tag" style="color: #000096">&lt;/groupId&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;artifactId&gt;</strong>autoconfig-maven-plugin<strong class="hl-tag" style="color: #000096">&lt;/artifactId&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;version&gt;</strong>${autoconfig-plugin-version}<strong class="hl-tag" style="color: #000096">&lt;/version&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;configuration&gt;</strong>
+                    ...
+                    <em class="hl-comment" style="color: green">&lt;!-- 配置后，是否展开目标文件，默认为false，不展开。 --&gt;</em>
+                    <strong class="hl-tag" style="color: #000096">&lt;exploding&gt;</strong>true<strong class="hl-tag" style="color: #000096">&lt;/exploding&gt;</strong>
+                    <em class="hl-comment" style="color: green">&lt;!-- 展开到指定目录，默认为${project.build.directory}/${project.build.finalName}。 --&gt;</em>
+                    <strong class="hl-tag" style="color: #000096">&lt;explodedDirectory&gt;</strong>
+                        ${project.build.directory}/${project.build.finalName}
+                    <strong class="hl-tag" style="color: #000096">&lt;/explodedDirectory&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;/configuration&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;executions&gt;</strong>
+                    <strong class="hl-tag" style="color: #000096">&lt;execution&gt;</strong>
+                        <strong class="hl-tag" style="color: #000096">&lt;phase&gt;</strong>package<strong class="hl-tag" style="color: #000096">&lt;/phase&gt;</strong>
+                        <strong class="hl-tag" style="color: #000096">&lt;goals&gt;</strong>
+                            <strong class="hl-tag" style="color: #000096">&lt;goal&gt;</strong>autoconfig<strong class="hl-tag" style="color: #000096">&lt;/goal&gt;</strong>
+                        <strong class="hl-tag" style="color: #000096">&lt;/goals&gt;</strong>
+                    <strong class="hl-tag" style="color: #000096">&lt;/execution&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;/executions&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;/plugin&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;/plugins&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/build&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/project&gt;</strong></pre></div></div><p>关于AutoConfig详情，请看<a class="xref" href="autoconfig.html" title="第 13 章 AutoConfig工具使用指南">第 13 章 <em>AutoConfig工具使用指南</em></a>。</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="d0e18884"><!--anchor d0e18884--></a>14.3. AutoExpand的参数</h2></div></div></div><p>AutoExpand可用的参数包括：</p><div class="table"><a id="d0e18889"><!--anchor d0e18889--></a><p class="title"><strong>表 14.3. AutoExpand命令的参数</strong></p><div class="table-contents"><table summary="AutoExpand命令的参数" cellpadding="10" style="border: none;"><colgroup><col width="28%" class="c1"/><col width="72%" class="c2"/></colgroup><thead><tr><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">参数名</th><th style="border-bottom: 0.5pt solid #6666cc; ">说明</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; "><code class="code">-w</code> 或 <code class="code">--expand-war</code></td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                            <p>是否展开war（yes或no），默认为yes。</p>
+                        </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; "><code class="code">-r</code> 或 <code class="code">--expand-rar</code></td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                            <p>是否展开rar（yes或no），默认为yes。</p>
+                        </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; "><code class="code">-e</code> 或 <code class="code">--expand-ejb-jar</code></td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                            <p>是否展开ejb-jar（yes或no），默认为no。</p>
+                            <p>展开ejb-jar需要读取<code class="filename">/META-INF/application.xml</code>文件，因此会降低展开的速度。</p>
+                        </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; "><code class="code">-o</code> 或 <code class="code">--overwrite</code></td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                            <p>如果目标目录中的文件比包文件中的项要新，是否覆盖之，默认为no。</p>
+                            <p>指定该参数可强制覆盖文件。</p>
+                            <p>如果你不信任文件中的时间戳，就可以指定这个参数。</p>
+                        </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; "><code class="code">-k</code> 或 <code class="code">--keep-redundant-files</code></td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                            <p>如果目标目录存在多余的文件（也就是包里不存在的文件），AutoExpand会将它们删除，以确保展开后的目录内容与包的内容完全一致，不多不少。</p>
+                            <p>指定这个参数可以避免AutoExpand删除多余的文件。</p>
+                        </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; "><code class="code">-v</code> 或 <code class="code">--verbose</code></td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                            <p>显示更多信息。</p>
+                        </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; "><code class="code">-c</code> 或 <code class="code">--charset</code></td><td style="">
+                            <p>如果AutoExpand显示的信息是乱码，请通过这个参数指定正确的字符集编码。</p>
+                        </td></tr></tbody></table></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="d0e19001"><!--anchor d0e19001--></a>14.4. 本章总结</h2></div></div></div><p>AutoExpand虽然小，但很好用，可以作为<span class="command"><strong>jar</strong></span>命令部分功能的替代品。此外，AutoConfig也利用AutoExpand来展开经过配置的包文件。</p></div></div><div class="navfooter"><hr/><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="autoconfig.html">上一页</a> </td><td width="20%" align="center"><a accesskey="u" href="pt05.html">上一级</a></td><td width="40%" align="right"> </td></tr><tr><td width="40%" align="left" valign="top">第 13 章 AutoConfig工具使用指南 </td><td width="20%" align="center"><a accesskey="h" href="index.html">起始页</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>

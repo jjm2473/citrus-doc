@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>第 12 章 安装和使用SpringExt插件</title><link rel="stylesheet" type="text/css" href="docbook.css"/><meta name="generator" content="DocBook XSL Stylesheets V1.77.1"/><link rel="home" href="index.html" title="Webx框架指南"/><link rel="up" href="pt05.html" title="部分 V. 辅助工具"/><link rel="prev" href="pt05.html" title="部分 V. 辅助工具"/><link rel="next" href="autoconfig.html" title="第 13 章 AutoConfig工具使用指南"/><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">第 12 章 安装和使用SpringExt插件</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pt05.html">上一页</a> </td><th width="60%" align="center">部分 V. 辅助工具</th><td width="20%" align="right"> <a accesskey="n" href="autoconfig.html">下一页</a></td></tr></table><hr/></div><div xml:lang="zh-CN" class="chapter"><div class="titlepage"><div><div><h2 class="title"><a id="tool.plugin.springext"><!--anchor tool.plugin.springext--></a>第 12 章 安装和使用SpringExt插件</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="springext-plugin.html#d0e16013">12.1. SpringExt插件有什么用？</a></span></dt><dt><span class="section"><a href="springext-plugin.html#tool.plugin.springext.maven">12.2. Maven插件</a></span></dt><dd><dl><dt><span class="section"><a href="springext-plugin.html#d0e16100">12.2.1. 在<code class="code">pom.xml</code>中定义插件</a></span></dt><dt><span class="section"><a href="springext-plugin.html#d0e16130">12.2.2. 启动schema服务器</a></span></dt><dt><span class="section"><a href="springext-plugin.html#d0e16157">12.2.3. 导出所有的schemas</a></span></dt><dt><span class="section"><a href="springext-plugin.html#d0e16170">12.2.4. Maven插件的可选参数</a></span></dt></dl></dd><dt><span class="section"><a href="springext-plugin.html#tool.plugin.springext.eclipse">12.3. Eclipse插件</a></span></dt><dd><dl><dt><span class="section"><a href="springext-plugin.html#d0e16378">12.3.1. 安装插件</a></span></dt><dt><span class="section"><a href="springext-plugin.html#d0e16435">12.3.2. 利用插件编辑Webx/SpringExt配置文件</a></span></dt><dt><span class="section"><a href="springext-plugin.html#d0e16756">12.3.3. 利用插件编辑SpringExt组件</a></span></dt></dl></dd><dt><span class="section"><a href="springext-plugin.html#d0e16789">12.4. 本章总结</a></span></dt></dl></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="d0e16013"><!--anchor d0e16013--></a>12.1. SpringExt插件有什么用？</h2></div></div></div><p>SpringExt扩展了Spring的schema机制，使得开发者可以借助schema来扩展框架的功能。然而使用schema来编写配置文件时，我们面临一个问题：XML编辑器到哪里去找到schema？</p><p>例如，我们在Eclipse中打开一个典型的Webx配置文件：</p><div class="example"><a id="example.schema.locations1"><!--anchor example.schema.locations1--></a><p class="title"><strong>例 12.1. 在XML中指定Schema Location</strong></p><div class="example-contents"><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span>
+<strong class="hl-tag" style="color: #000096">&lt;beans:beans</strong> <span class="hl-attribute" style="color: #F5844C">xmlns:xsi</span>=<span class="hl-value" style="color: #993300">"http://www.w3.org/2001/XMLSchema-instance"</span>
+    <span class="hl-attribute" style="color: #F5844C">xmlns:services</span>=<span class="hl-value" style="color: #993300">"http://www.alibaba.com/schema/services"</span>
+    <span class="hl-attribute" style="color: #F5844C">xmlns:loaders</span>=<span class="hl-value" style="color: #993300">"http://www.alibaba.com/schema/services/resource-loading/loaders"</span>
+    <span class="hl-attribute" style="color: #F5844C">xmlns:beans</span>=<span class="hl-value" style="color: #993300">"http://www.springframework.org/schema/beans"</span>
+    <span class="hl-attribute" style="color: #F5844C">xmlns:p</span>=<span class="hl-value" style="color: #993300">"http://www.springframework.org/schema/p"</span>
+    <span class="hl-attribute" style="color: #F5844C">xsi:schemaLocation</span>=<span class="hl-value" style="color: #993300">"
+        http://www.alibaba.com/schema/services
+            </span><span class="emphasis"><em>http://localhost:8080/schema/services.xsd</em></span> <a id="co.schema.location.services1"><!--anchor co.schema.location.services1--></a><span class="calloutno"><img src="images/callouts/1.png" border="0"/></span>
+        http://www.alibaba.com/schema/services/resource-loading/loaders
+            <span class="emphasis"><em>http://localhost:8080/schema/services-resource-loading-loaders.xsd</em></span> <a id="co.schema.location.loaders1"><!--anchor co.schema.location.loaders1--></a><span class="calloutno"><img src="images/callouts/2.png" border="0"/></span>
+        http://www.springframework.org/schema/beans
+            <span class="emphasis"><em>http://localhost:8080/schema/www.springframework.org/schema/beans/spring-beans.xsd</em></span> <a id="co.schema.location.beans1"><!--anchor co.schema.location.beans1--></a><span class="calloutno"><img src="images/callouts/3.png" border="0"/></span>
+    "&gt;
+    ...
+<strong class="hl-tag" style="color: #000096">&lt;/beans:beans&gt;</strong></pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co.schema.location.services1"><span class="calloutno"><img src="images/callouts/1.png" border="0"/></span></a> <a href="#co.schema.location.loaders1"><span class="calloutno"><img src="images/callouts/2.png" border="0"/></span></a> <a href="#co.schema.location.beans1"><span class="calloutno"><img src="images/callouts/3.png" border="0"/></span></a> </p></td><td valign="top" align="left"><p>指定schema的位置。</p></td></tr></table></div></div></div><p>一般Eclispe会用一个XML编辑器来打开这类文件，然后试着从<code class="code">schemaLocation</code>中取得所需要的schemas，并用它们来验证文件。然而，Webx/SpringExt的schema并不存在于网络上的任何一个地方，而是存在于jar包中，或是在内存中自动生成的。显然XML编辑器不能从这样的<code class="code">schemaLocation</code>中得到什么。</p><p>因此，当我们试图验证（validate）XML文件的时候，编辑器会警告：无法取得schema或DTD。当我们试图让Eclipse自动提示语法信息时，Eclipse会无所适从。如图所示。</p><div class="figure"><a id="d0e16054"><!--anchor d0e16054--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/no-plugin.png" alt="无法验证的XML配置文件"/></div></div><p class="title"><strong>图 12.1. 无法验证的XML配置文件</strong></p></div><p>SpringExt提供了两种插件，可用来解决这个问题：Maven插件，和Eclipse插件。</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><span class="emphasis"><em>Maven插件</em></span> ——
+                        你可以使用它，在<code class="code">localhost</code>本机上启动一个监听<code class="code">8080</code>端口的Schema
+                    Server，通过它就可以访问到所有的schemas。</p><p>这也是为什么<a class="xref" href="springext-plugin.html#example.schema.locations1" title="例 12.1. 在XML中指定Schema Location">例 12.1 “在XML中指定Schema Location”</a>中，要把<code class="code">schemaLocation</code>指向<code class="code">localhost:8080</code>的原因。只有这样，才能让任何普通的XML编辑器不需要任何特殊的设置，就可以通过这个插件来读到正确的schemas。</p></li><li class="listitem"><p><span class="emphasis"><em>Eclipse插件</em></span> ——
+                    通过它，XML编辑器可以直接取得所有schemas的内容。除此之外，Eclipse插件也提供了更多的便利功能，例如：自动引入或清除某个namespace/schema定义。</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="tool.plugin.springext.maven"><!--anchor tool.plugin.springext.maven--></a>12.2. Maven插件</h2></div></div></div><p>通过SpringExt Maven插件，你可以在<code class="code">localhost</code>本机上启动一个监听<code class="code">8080</code>端口的Schema
+            Server，通过它就可以访问到所有的schemas。这种机制适合于任何一种支持schema验证的XML编辑器。</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e16100"><!--anchor d0e16100--></a>12.2.1. 在<code class="code">pom.xml</code>中定义插件</h3></div></div></div><p>在使用Maven插件之前，必须在要使用插件功能的项目的<code class="code">pom.xml</code>文件中作出定义。如果是多模块的项目（multi-modules），下面的内容必须定义在根项目（即pom项目）中。</p><div class="example"><a id="d0e16111"><!--anchor d0e16111--></a><p class="title"><strong>例 12.2. 在<code class="code">pom.xml</code>这定义SpringExt Maven插件</strong></p><div class="example-contents"><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<strong class="hl-tag" style="color: #000096">&lt;project</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://maven.apache.org/POM/4.0.0"</span>
+         <span class="hl-attribute" style="color: #F5844C">xmlns:xsi</span>=<span class="hl-value" style="color: #993300">"http://www.w3.org/2001/XMLSchema-instance"</span>
+         <span class="hl-attribute" style="color: #F5844C">xsi:schemaLocation</span>=<span class="hl-value" style="color: #993300">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+    ...
+    <strong class="hl-tag" style="color: #000096">&lt;properties&gt;</strong>
+        ...
+        <strong class="hl-tag" style="color: #000096">&lt;springext-plugin-version&gt;</strong>1.2<strong class="hl-tag" style="color: #000096">&lt;/springext-plugin-version&gt;</strong> <a id="co.springext-maven-version.property"><!--anchor co.springext-maven-version.property--></a><span class="calloutno"><img src="images/callouts/1.png" border="0"/></span>
+    <strong class="hl-tag" style="color: #000096">&lt;/properties&gt;</strong>
+    ...
+    <strong class="hl-tag" style="color: #000096">&lt;build&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;plugins&gt;</strong>
+            ...
+            <strong class="hl-tag" style="color: #000096">&lt;plugin&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;groupId&gt;</strong>com.alibaba.citrus.tool<strong class="hl-tag" style="color: #000096">&lt;/groupId&gt;</strong> <a id="co.springext-maven-plugin"><!--anchor co.springext-maven-plugin--></a><span class="calloutno"><img src="images/callouts/2.png" border="0"/></span>
+                <strong class="hl-tag" style="color: #000096">&lt;artifactId&gt;</strong>springext-maven-plugin<strong class="hl-tag" style="color: #000096">&lt;/artifactId&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;/plugin&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;/plugins&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;pluginManagement&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;plugins&gt;</strong>
+                ...
+                <strong class="hl-tag" style="color: #000096">&lt;plugin&gt;</strong>
+                    <strong class="hl-tag" style="color: #000096">&lt;groupId&gt;</strong>com.alibaba.citrus.tool<strong class="hl-tag" style="color: #000096">&lt;/groupId&gt;</strong>
+                    <strong class="hl-tag" style="color: #000096">&lt;artifactId&gt;</strong>springext-maven-plugin<strong class="hl-tag" style="color: #000096">&lt;/artifactId&gt;</strong>
+                    <strong class="hl-tag" style="color: #000096">&lt;version&gt;</strong>${springext-plugin-version}<strong class="hl-tag" style="color: #000096">&lt;/version&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;/plugin&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;/plugins&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;/pluginManagement&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/build&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/project&gt;</strong></pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><a href="#co.springext-maven-version.property"><span class="calloutno"><img src="images/callouts/1.png" border="0"/></span></a> </p></td><td valign="top" align="left"><p>在maven properties中指定插件的版本号，方便以后升级。</p></td></tr><tr><td width="5%" valign="top" align="left"><p><a href="#co.springext-maven-plugin"><span class="calloutno"><img src="images/callouts/2.png" border="0"/></span></a> </p></td><td valign="top" align="left"><p>在项目中配置插件。</p></td></tr></table></div></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e16130"><!--anchor d0e16130--></a>12.2.2. 启动schema服务器</h3></div></div></div><p>在项目的根目录下，执行以下命令：</p><pre class="screen"><span class="command"><strong>mvn springext:run</strong></span></pre><p>上述命令执行以后，打开浏览器，输入网址<code class="code">http://localhost:8080/schema</code>就可以看到类似下面的内容：</p><div class="figure"><a id="d0e16143"><!--anchor d0e16143--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/maven/schema-exporter.png" alt="用SpringExt maven插件罗列schemas"/></div></div><p class="title"><strong>图 12.2. 用SpringExt maven插件罗列schemas</strong></p></div><p>如果这时你重新打开刚才的XML配置文件（最好重启eclipse以清除缓存），就可以看到Eclipse已经能够弹出语法提示了。</p><div class="figure"><a id="d0e16151"><!--anchor d0e16151--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/maven/schema-gramma-assist.png" alt="启动schema服务器以后，可以看到语法提示"/></div></div><p class="title"><strong>图 12.3. 启动schema服务器以后，可以看到语法提示</strong></p></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e16157"><!--anchor d0e16157--></a>12.2.3. 导出所有的schemas</h3></div></div></div><p>在项目的根目录下，执行以下命令：</p><pre class="screen"><span class="command"><strong>mvn springext:export</strong></span></pre><p>上述命令执行以后，将生成一个<code class="code">target/schemas</code>文件夹，里面包含了所有的可用的schemas。</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e16170"><!--anchor d0e16170--></a>12.2.4. Maven插件的可选参数</h3></div></div></div><p>SpringExt Maven插件还包含了一系列可选的参数。</p><div class="table"><a id="d0e16175"><!--anchor d0e16175--></a><p class="title"><strong>表 12.1. SpringExt Maven插件的可选参数</strong></p><div class="table-contents"><table summary="SpringExt Maven插件的可选参数" cellpadding="10" style="border: none;"><colgroup><col width="16%" class="c1"/><col width="17%" class="c2"/><col width="16%" class="c3"/><col width="51%" class="c4"/></colgroup><thead><tr><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">参数名</th><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">适用于命令</th><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">默认值</th><th style="border-bottom: 0.5pt solid #6666cc; ">说明</th></tr></thead><tbody><tr><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <code class="code">contextPath</code>
+                            </th><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <code class="code">mvn springext:run</code>
+                            </td><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <code class="code">/schema</code>
+                            </td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                <p>指定Schema URL的路径：</p>
+                                <p>
+                                    <code class="code">http://localhost:8080</code>
+                                    <span class="emphasis"><em>
+                                        <code class="code">/contextPath</code>
+                                    </em></span>
+                                    <code class="code">/myschema.xsd</code>
+                                </p>
+                            </td></tr><tr><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <code class="code">port</code>
+                            </th><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <code class="code">mvn springext:run</code>
+                            </td><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <code class="code">8080</code>
+                            </td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                <p>指定Schema URL的端口：</p>
+                                <p>
+                                    <code class="code">http://localhost</code>
+                                    <span class="emphasis"><em>
+                                        <code class="code">:8080</code>
+                                    </em></span>
+                                    <code class="code">/contextPath/myschema.xsd</code>
+                                </p>
+                            </td></tr><tr><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <code class="code">noTestClasspath</code>
+                            </th><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <p>
+                                    <code class="code">mvn springext:run</code>
+                                </p>
+                                <p>
+                                    <code class="code">mvn springext:export</code>
+                                </p>
+                            </td><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <code class="code">false</code>
+                            </td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                <p>是否在单元测试的classpath中寻找schemas？</p>
+                            </td></tr><tr><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <code class="code">destdir</code>
+                            </th><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <code class="code">mvn springext:export</code>
+                            </td><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                <code class="code">target/schemas</code>
+                            </td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                <p>导出schemas到指定的文件夹。</p>
+                            </td></tr><tr><th style="border-right: 0.5pt solid #6666cc; ">
+                                <code class="code">uriPrefix</code>
+                            </th><td style="border-right: 0.5pt solid #6666cc; ">
+                                <code class="code">mvn springext:export</code>
+                            </td><td style="border-right: 0.5pt solid #6666cc; ">导出schemas的目标文件夹的绝对路径</td><td style="">
+                                <p>在导入的schemas中，如果有引用其它的schema的地方，使用指定的URL前缀。</p>
+                                <p>
+                                    <span class="emphasis"><em>
+                                        <code class="code">http://localhost:8080/schema</code>
+                                    </em></span>
+                                    <code class="code">/myschema.xsd</code>
+                                </p>
+                            </td></tr></tbody></table></div></div><p>这些参数可以通过两种方法来设定。以参数<code class="code">port</code>为例：</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>通过<code class="code">pom.xml</code>来设定</p><pre class="programlisting"><span class="hl-directive" style="color: maroon">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<strong class="hl-tag" style="color: #000096">&lt;project</strong> <span class="hl-attribute" style="color: #F5844C">xmlns</span>=<span class="hl-value" style="color: #993300">"http://maven.apache.org/POM/4.0.0"</span>
+         <span class="hl-attribute" style="color: #F5844C">xmlns:xsi</span>=<span class="hl-value" style="color: #993300">"http://www.w3.org/2001/XMLSchema-instance"</span>
+         <span class="hl-attribute" style="color: #F5844C">xsi:schemaLocation</span>=<span class="hl-value" style="color: #993300">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+    ...
+    <strong class="hl-tag" style="color: #000096">&lt;build&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;plugins&gt;</strong>
+            ...
+            <strong class="hl-tag" style="color: #000096">&lt;plugin&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;groupId&gt;</strong>com.alibaba.citrus.tool<strong class="hl-tag" style="color: #000096">&lt;/groupId&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;artifactId&gt;</strong>springext-maven-plugin<strong class="hl-tag" style="color: #000096">&lt;/artifactId&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;configuration&gt;</strong>
+                    <span class="emphasis"><em>&lt;port&gt;9090&lt;/port&gt;</em></span>
+                <strong class="hl-tag" style="color: #000096">&lt;/configuration&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;/plugin&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;/plugins&gt;</strong>
+        ...
+    <strong class="hl-tag" style="color: #000096">&lt;/build&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/project&gt;</strong></pre></li><li class="listitem"><p>或者，通过命令行来设定</p><pre class="screen"><span class="command"><strong>mvn springext:run </strong></span><span class="emphasis"><em><code class="code">-Dport=9090</code></em></span></pre></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="tool.plugin.springext.eclipse"><!--anchor tool.plugin.springext.eclipse--></a>12.3. Eclipse插件</h2></div></div></div><p>如果你用Eclipse来作为你的应用开发的工具，那么SpringExt Eclipse插件能够为你提供最方便、更强大的功能。</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e16378"><!--anchor d0e16378--></a>12.3.1. 安装插件</h3></div></div></div><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>下载并安装Eclipse，建议安装最新版的Eclipse：<a class="link" href="http://www.eclipse.org/" target="_top">http://www.eclipse.org/</a>。</p></li><li class="listitem"><p>运行Eclipse，从Help菜单中，打开Eclipse Marketplace。 </p><div class="figure"><a id="d0e16390"><!--anchor d0e16390--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/install-1-menu.png" alt="打开Eclipse Marketplace"/></div></div><p class="title"><strong>图 12.4. 打开Eclipse Marketplace</strong></p></div></li><li class="listitem"><p>搜索关键词<code class="code">webx</code>，找到Webx/SpringExt Plugin，点击Install按钮。</p><div class="figure"><a id="d0e16402"><!--anchor d0e16402--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/install-2-search.png" alt="搜索并找到Webx/SpringExt Plugin"/></div></div><p class="title"><strong>图 12.5. 搜索并找到Webx/SpringExt Plugin</strong></p></div></li><li class="listitem"><p>开始安装插件。</p><div class="figure"><a id="d0e16411"><!--anchor d0e16411--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/install-3-install.png" alt="勾选要安装的features"/></div></div><p class="title"><strong>图 12.6. 勾选要安装的features</strong></p></div><div class="figure"><a id="d0e16417"><!--anchor d0e16417--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/install-4-license.png" alt="确认License授权"/></div></div><p class="title"><strong>图 12.7. 确认License授权</strong></p></div><div class="figure"><a id="d0e16423"><!--anchor d0e16423--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/install-5-sign.png" alt="忽略关于签名的安全警告，选择OK继续安装"/></div></div><p class="title"><strong>图 12.8. 忽略关于签名的安全警告，选择OK继续安装</strong></p></div><div class="figure"><a id="d0e16429"><!--anchor d0e16429--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/install-6-restart.png" alt="重启Eclipse"/></div></div><p class="title"><strong>图 12.9. 重启Eclipse</strong></p></div></li></ol></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e16435"><!--anchor d0e16435--></a>12.3.2. 利用插件编辑Webx/SpringExt配置文件</h3></div></div></div><p>安装完成Eclipse插件以后，然后打开任何一个Webx/SpringExt的配置文件。你会发现，打开的是一个稍微有点不同的XML编辑器。</p><div class="figure"><a id="d0e16440"><!--anchor d0e16440--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/editor-ui.png" alt="SpringExt配置文件编辑器的界面"/></div></div><p class="title"><strong>图 12.10. SpringExt配置文件编辑器的界面</strong></p></div><p>假如你看到的并不是类似这样的编辑器界面，那么很有可能是因为你的Eclipse中还安装了其它的插件（例如：你安装了Spring
+                IDE、或者OxygenXML编辑器等），导致该文件被其它的编辑器打开了。如果是这样，请尝试用鼠标右键点击文件，然后选择Open With &gt; SpringExt
+                Configuration File Editor。如图所示。</p><div class="figure"><a id="d0e16448"><!--anchor d0e16448--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/open-with.png" alt="用Open With菜单打开文件"/></div></div><p class="title"><strong>图 12.11. 用Open With菜单打开文件</strong></p></div><p>在这个编辑器中，你可以做如下的事情：</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>验证配置文件是否合乎schema语法 —— 按鼠标右键，选择validate。</p></li><li class="listitem"><p>自动语法提示 ——
+                        在键入时，eclipse会自动弹出语法提示；或者，你也可以通过eclipse的快捷键来激活语法提示（完全类似于编辑Java代码）。</p></li><li class="listitem"><p>引入Namespaces —— 在键入时，eclipse会提示你引入可用的namespaces。每个namespace代表一个SpringExt
+                        Configuration
+                            Point或Spring的一个可扩展功能。引入一个namespace，就会创建一个<code class="code">xmlns</code>条目，以及相应的<code class="code">schemaLocation</code>。</p><div class="figure"><a id="d0e16472"><!--anchor d0e16472--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/import-services-ns.png" alt="在&lt;beans:beans&gt;中引入services namespace"/></div></div><p class="title"><strong>图 12.12. 在&lt;beans:beans&gt;中引入services namespace</strong></p></div><div class="figure"><a id="d0e16478"><!--anchor d0e16478--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/import-valves-ns.png" alt="在&lt;services:pipeline&gt;中引入valves namespace"/></div></div><p class="title"><strong>图 12.13. 在&lt;services:pipeline&gt;中引入valves namespace</strong></p></div></li><li class="listitem"><p>按住CTRL键（Mac下为CMD键），将鼠标移到任何一个链接上，或者namespace前缀及对应的标签上，都是可以点击查看的。</p><div class="table"><a id="d0e16487"><!--anchor d0e16487--></a><p class="title"><strong>表 12.2. 可作为超链接打开的内容</strong></p><div class="table-contents"><table summary="可作为超链接打开的内容" cellpadding="10" style="border: none;"><colgroup><col width="14%" class="c1"/><col width="28%" class="c2"/><col width="58%" class="c3"/></colgroup><thead><tr><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">分类</th><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">可点击的内容</th><th style="border-bottom: 0.5pt solid #6666cc; ">说明</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; " rowspan="3">SpringExt Configuration Point</td><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                        <code class="code">http://www.alibaba.com/schema/services</code>
+                                    </td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                        <p>这是一个Namespace URI，它代表一个SpringExt的扩展点（Configuration
+                                            Point）。</p>
+                                        <p>点击它就可以打开相应Configuration Point的编辑器。</p>
+                                    </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                        <code class="code">http://localhost:8080/schema/services.xsd</code>
+                                    </td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                        <p>这是一个Schema
+                                            Location的链接，它代表一个SpringExt的扩展点（Configuration
+                                            Point）的schema。</p>
+                                        <p>点击它就可以打开相应Configuration Point的编辑器。</p>
+                                    </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                        <span class="emphasis"><em>
+                                            <code class="code">services</code>
+                                        </em></span>
+                                        <code class="code">:resource-loading</code>
+                                    </td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                        <p>这是一个Namespace前缀，它代表一个SpringExt的扩展点（Configuration
+                                            Point）。</p>
+                                        <p>点击它就可以打开相应Configuration Point的编辑器。</p>
+                                    </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; " rowspan="2">SpringExt Contribution</td><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                        <code class="code">http://localhost:8080/schema/services/resource-loading.xsd"</code>
+                                    </td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                        <p>这是一个Schema
+                                            Location的链接，它代表一个SpringExt的捐献（Contribution）的schema。</p>
+                                        <p>点击它就可以打开相应Contribution的编辑器。</p>
+                                    </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                        <code class="code">services</code>
+                                        <span class="emphasis"><em>
+                                            <code class="code">:resource-loading</code>
+                                        </em></span>
+                                    </td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                        <p>这是一个XML标签，它代表一个SpringExt的捐献（Contribution）。</p>
+                                        <p>点击它就可以打开相应Contribution的编辑器。</p>
+                                    </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; " rowspan="3">Spring Pluggable Schema</td><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                        <code class="code">http://www.springframework.org/schema/beans</code>
+                                    </td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                        <p>这是一个Namespace URI，它代表一个Spring所定义的schema。</p>
+                                        <p>点击它就可以打开相应的Spring Pluggable Schema的编辑器。</p>
+                                    </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">
+                                        <p>
+                                            <code class="code">http://localhost:8080/schema/www.springframework.org/schema/beans/spring-beans.xsd</code>
+                                        </p>
+                                        <p>或者：<code class="code">http://www.springframework.org/schema/beans/spring-beans.xsd</code></p>
+                                    </td><td style="border-bottom: 0.5pt solid #6666cc; ">
+                                        <p>这是一个Schema Location的链接，它代表一个Spring所定义的schema。</p>
+                                        <p>点击它就可以打开相应的Spring Pluggable Schema的编辑器。</p>
+                                    </td></tr><tr><td style="border-right: 0.5pt solid #6666cc; ">
+                                        <span class="emphasis"><em>
+                                            <code class="code">beans</code>
+                                        </em></span>
+                                        <code class="code">:bean</code>
+                                    </td><td style="">
+                                        <p>这是一个Namespace前缀，它代表一个Spring所定义的schema。</p>
+                                        <p>点击它就可以打开相应的Spring Pluggable Schema的编辑器。</p>
+                                    </td></tr></tbody></table></div></div></li><li class="listitem"><p>点击Namespaces标签，即可管理配置文件中所引入的namespaces。</p><div class="figure"><a id="d0e16650"><!--anchor d0e16650--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/ns-tab-ui.png" alt="Namespaces编辑界面"/></div></div><p class="title"><strong>图 12.14. Namespaces编辑界面</strong></p></div><p>在这里，你可以：</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; "><li class="listitem"><p>浏览所有可用的namespaces。</p><p>你可以用层次状，或是扁平状两种视图来查看。点击namespaces列表顶上的<span class="inlinemediaobject"><img src="images/plugin/eclipse/icons/list.png"/></span>或<span class="inlinemediaobject"><img src="images/plugin/eclipse/icons/tree.png"/></span>按钮即可切换视图。</p><p>对于层次状列表，点击namespaces列表顶上的<span class="inlinemediaobject"><img src="images/plugin/eclipse/icons/expand.png"/></span>按钮即可实现全部展开，或点击<span class="inlinemediaobject"><img src="images/plugin/eclipse/icons/collapse.png"/></span>按钮可全部收拢。</p><p>你也可以在过滤框里输入任何字符，来过滤列表，使之只显示你感兴趣的条目。</p></li><li class="listitem"><p>选中某行namespace（注意不是打勾），可查看这个namespace的详细信息。</p><p>例如：namespace的类型、定义在何处、有哪些schema版本等等。</p></li><li class="listitem"><p>点击详细信息中的超链接可打开相应的内容的编辑器。</p></li><li class="listitem"><p>勾选或清除namespace，可在配置文件中插入或清除相应的xmlns和schemaLocation条目。</p></li></ul></div></li><li class="listitem"><p>清除未使用的namespaces —— 选择SpringExt菜单中的“<span class="inlinemediaobject"><img src="images/plugin/eclipse/icons/clear-ns.png"/></span> Cleanup Unused Namespaces”、或者点击工具栏上的<span class="inlinemediaobject"><img src="images/plugin/eclipse/icons/clear-ns.png"/></span>、或者按快捷键<code class="code">CTRL-SHIFT-O</code>（Mac上为<code class="code">CMD-SHIFT-O</code>）。</p></li><li class="listitem"><p>升级到Webx 3.2.x的配置风格 —— 从Webx 3.2.x开始，改进了配置文件的格式 —— 对于非contribution
+                            element采用unqualifed风格，也就是无namespace前缀，使配置文件更易读。</p><div class="table"><a id="d0e16715"><!--anchor d0e16715--></a><p class="title"><strong>表 12.3. 新老风格对比</strong></p><div class="table-contents"><table summary="新老风格对比" cellpadding="10" style="border: none;"><colgroup><col width="50%" class="c1"/><col width="50%" class="c2"/></colgroup><thead><tr><th style="border-right: 0.5pt solid #6666cc; border-bottom: 0.5pt solid #6666cc; ">老风格</th><th style="border-bottom: 0.5pt solid #6666cc; ">Webx 3.2.x 新风格</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid #6666cc; ">
+                                            <pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;services:form&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;services:group</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"register"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;services:field</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"name"</span> <span class="hl-attribute" style="color: #F5844C">displayName</span>=<span class="hl-value" style="color: #993300">"你的名字"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;fm-validators:required-validator&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;fm-validators:message&gt;</strong>必须填写 ${displayName}<strong class="hl-tag" style="color: #000096">&lt;/fm-validators:message&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;/fm-validators:required-validator&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;/services:field&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/services:group&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/services:form&gt;</strong></pre>
+                                        </td><td style="">
+                                            <pre class="programlisting"><strong class="hl-tag" style="color: #000096">&lt;services:form&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;group</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"register"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;field</strong> <span class="hl-attribute" style="color: #F5844C">name</span>=<span class="hl-value" style="color: #993300">"name"</span> <span class="hl-attribute" style="color: #F5844C">displayName</span>=<span class="hl-value" style="color: #993300">"你的名字"</span><strong class="hl-tag" style="color: #000096">&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;fm-validators:required-validator&gt;</strong>
+                <strong class="hl-tag" style="color: #000096">&lt;message&gt;</strong>必须填写 ${displayName}<strong class="hl-tag" style="color: #000096">&lt;/message&gt;</strong>
+            <strong class="hl-tag" style="color: #000096">&lt;/fm-validators:required-validator&gt;</strong>
+        <strong class="hl-tag" style="color: #000096">&lt;/field&gt;</strong>
+    <strong class="hl-tag" style="color: #000096">&lt;/group&gt;</strong>
+<strong class="hl-tag" style="color: #000096">&lt;/services:form&gt;</strong></pre>
+                                        </td></tr></tbody></table></div></div><p>但是这样配置文件会和以前的版本有所不兼容。如果你决定要升级Webx到3.2.0，只需要选择SpringExt菜单中的“<span class="inlinemediaobject"><img src="images/plugin/eclipse/icons/upgrade32.png"/></span> Upgrade to Webx 3.2.x Format”，或者点击工具栏上的<span class="inlinemediaobject"><img src="images/plugin/eclipse/icons/upgrade32.png"/></span>按钮，即可立即转换格式。</p><p>如果你要升级的配置文件不止一个，最简单的方法是在项目的根目录下执行下面的命令：</p><pre class="screen"><span class="command"><strong>mvn springext:convert</strong></span></pre><p>这样所有的Webx/SpringExt配置文件都会被转换成新的格式。</p></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a id="d0e16756"><!--anchor d0e16756--></a>12.3.3. 利用插件编辑SpringExt组件</h3></div></div></div><p>当你在配置文件中，点击任何一个超链接时，就会打开并转到另一个编辑器。在那里，你可以浏览或修改（如果可写的话）SpringExt的组件的内容。</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>编辑Configuration Point</p><div class="figure"><a id="d0e16765"><!--anchor d0e16765--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/editor-cp.png" alt="编辑Configuration Point"/></div></div><p class="title"><strong>图 12.15. 编辑Configuration Point</strong></p></div></li><li class="listitem"><p>编辑Contribution</p><div class="figure"><a id="d0e16774"><!--anchor d0e16774--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/editor-contrib.png" alt="编辑Contribution"/></div></div><p class="title"><strong>图 12.16. 编辑Contribution</strong></p></div></li><li class="listitem"><p>编辑Spring Pluggable Schema</p><div class="figure"><a id="d0e16783"><!--anchor d0e16783--></a><div class="figure-contents"><div class="mediaobject"><img src="images/plugin/eclipse/editor-spring.png" alt="编辑Spring Pluggable Schema"/></div></div><p class="title"><strong>图 12.17. 编辑Spring Pluggable Schema</strong></p></div></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="d0e16789"><!--anchor d0e16789--></a>12.4. 本章总结</h2></div></div></div><p>SpringExt提供了可扩展的schema机制，虽然很强大，但是如果没有插件的帮助，使用起来很不便。用好插件，可帮助你成倍地提高工作效率。</p></div></div><div class="navfooter"><hr/><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pt05.html">上一页</a> </td><td width="20%" align="center"><a accesskey="u" href="pt05.html">上一级</a></td><td width="40%" align="right"> <a accesskey="n" href="autoconfig.html">下一页</a></td></tr><tr><td width="40%" align="left" valign="top">部分 V. 辅助工具 </td><td width="20%" align="center"><a accesskey="h" href="index.html">起始页</a></td><td width="40%" align="right" valign="top"> 第 13 章 AutoConfig工具使用指南</td></tr></table></div></body></html>
